@@ -61,14 +61,17 @@ var form = `
 </html>
 `
 
+// FormTemplate is used to fill in the form template
 type FormTemplate struct {
 	Type string
 }
 
+// Server is the quickscan server
 type Server struct {
 	db *sql.DB
 }
 
+// FormHandler handles form submissions
 func (s *Server) FormHandler(w http.ResponseWriter, r *http.Request) {
 	feedback := ""
 	switch r.Method {
@@ -88,7 +91,7 @@ func (s *Server) FormHandler(w http.ResponseWriter, r *http.Request) {
 	typ := r.URL.Query().Get("type")
 	w.Header().Set("Content-Type", "text/html")
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(fmt.Sprintf(form, strings.Title(strings.ReplaceAll(typ, "-", " ")), typ, feedback)))
+	w.Write([]byte(fmt.Sprintf(form, strings.ToTitle(strings.ReplaceAll(typ, "-", " ")), typ, feedback)))
 }
 
 func main() {
@@ -112,5 +115,7 @@ func main() {
 
 	addr := os.Getenv("LISTEN_ADDR")
 	log.Println("starting:", addr)
-	http.ListenAndServe(addr, hndlrs)
+	if err := http.ListenAndServe(addr, hndlrs); err != nil {
+		log.Println("http server failed:", err)
+	}
 }
