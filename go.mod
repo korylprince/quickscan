@@ -7,4 +7,4 @@ require (
 	github.com/mattn/go-sqlite3 v1.14.16
 )
 
-require github.com/felixge/httpsnoop v1.0.1 // indirect
+require github.com/felixge/httpsnoop v1.0.3 // indirect
