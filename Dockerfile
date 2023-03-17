@@ -1,15 +1,15 @@
-FROM golang:1-alpine as builder
+# FROM golang:1-alpine as builder
 
-ARG VERSION
+# RUN go install github.com/korylprince/fileenv@v1.1.0
 
-RUN apk add --no-cache sqlite build-base
+FROM alpine:latest
 
-RUN go install "github.com/korylprince/quickscan@$VERSION"
+ARG GO_PROJECT_NAME
+ENV GO_PROJECT_NAME=${GO_PROJECT_NAME}
 
-FROM alpine:3
+RUN apk add --no-cache ca-certificates
 
-RUN apk add --no-cache ca-certificates sqlite
+COPY docker-entrypoint.sh /
+COPY ${GO_PROJECT_NAME} /
 
-COPY --from=builder /go/bin/quickscan /
-
-CMD ["/quickscan"]
+CMD ["/docker-entrypoint.sh"]
